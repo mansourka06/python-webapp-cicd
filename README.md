@@ -66,9 +66,9 @@ Access the Python Flask web application in your browser at `http://localhost:500
 
 - Now, whenever I push to deploy branch, a new build will be triggered which will build and push the image to docker hub. The workflow is pretty simple and you may also extend it with running tests or performing other actions as per your requirements.
 
-    - You may have noticed we have used ${{ secrets.DOCKERHUB_USERNAME }} and ${{ secrets.DOCKERHUB_TOKEN }} in our workflow. Those are the docker hub credential stored in Github Secrets. We cannot publicly expose them because they grant access to our docker hub account.
+    - You may have noticed we have used `${{ secrets.DOCKERHUB_USERNAME }}` and `${{ secrets.DOCKERHUB_TOKEN }}` in our workflow. Those are the docker hub credential stored in Github Secrets. We cannot publicly expose them because they grant access to our docker hub account.
 
-    - Head over to Github Secrets page from Settings > Secrets and variables > Actions and click on New repository secret.
+    - Head over to Github Secrets page from `Settings` > `Secrets and variables` > `Actions` and click on `New repository secret`.
 
 - Our workflow is now ready. Let’s test it by pushing something to the deploy branch. If you are using some other branch, push to the associated branch accordingly.
 
