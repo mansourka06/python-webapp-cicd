@@ -58,6 +58,31 @@ docker run -d -p 5000:5000 python-webapp
 5. Access the Web Application:
 Access the Python Flask web application in your browser at `http://localhost:5000`.
 
+### Setting up github and github actions
+
+- As we can see, we have a [Dockerfile](Dockerfile) in our root directory with which we can build our docker image.
+
+- Let’s add a Github Actions workflow in our project directory. Create a directory named .github and inside that directory create another directory named workflows. All our workflow files will be stored inside this directory. Create a file named [cicd.yml](.github/workflows/cicd.yml) which will make the complete path as`.github/workflows/cicd.yml`, inside we add the [code pipeline](.github/workflows/cicd.yml).
+
+- Now, whenever I push to deploy branch, a new build will be triggered which will build and push the image to docker hub. The workflow is pretty simple and you may also extend it with running tests or performing other actions as per your requirements.
+
+    - You may have noticed we have used ${{ secrets.DOCKERHUB_USERNAME }} and ${{ secrets.DOCKERHUB_TOKEN }} in our workflow. Those are the docker hub credential stored in Github Secrets. We cannot publicly expose them because they grant access to our docker hub account.
+
+    - Head over to Github Secrets page from Settings > Secrets and variables > Actions and click on New repository secret.
+
+- Our workflow is now ready. Let’s test it by pushing something to the deploy branch. If you are using some other branch, push to the associated branch accordingly.
+
+## Troubleshooting
+
+- To check if the container is running or not you may run the following command:
+```
+docker ps
+```
+
+- To view the logs of the running container run:
+```
+docker logs <container id> or <container name>
+```
 
 ## Contributing
 Contributions are welcome! If you have any suggestions, improvements, or issues, feel free to open a pull request or an issue in the GitHub repository.
