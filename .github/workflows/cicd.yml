@@ -15,12 +15,12 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    - name: Set up Docker
-      uses: docker/setup-docker@v2
-      with:
-        dockerfile: Dockerfile
+    # - name: Set up Docker
+    #   uses: docker/setup-docker@v2
+    #   with:
+    #     dockerfile: Dockerfile
 
     - name: Build docker image
       run: docker build . --file Dockerfile --tag $(IMAGE_NAME):$(date +%s)
@@ -35,10 +35,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: setup docker buildx
+        uses: docker/setup-buildx-action@v2
+        
       - name: Log in to Docker Hub
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Tag and push to DockerHub Registry
-        run: |
-          docker tag webapp ${{ secrets.DOCKERHUB_USERNAME }}/$(IMAGE_NAME):${{ github.ref }}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$(IMAGE_NAME):${{ github.ref }}
+        id: build-push-api
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/$(IMAGE_NAME):latest
