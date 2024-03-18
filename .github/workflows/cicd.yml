@@ -3,42 +3,42 @@ name: Build and Push docker image to DockerHub Registry
 on:
   push:
     branches: [ "main" ]
-    # paths:
-    #   - 'app/**'
-    #   - '.github/workflows/**'
   pull_request:
     branches: [ "main" ]
-
+    
+env:
+  IMAGE_NAME: pyhton-flask-webapp
+  
 jobs:
-  #Stage build docker image
-  build:
+  build_and_run:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag pyhton-flask-webapp:$(date +%s)
-      
-  #Stage Deploy docker image
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker
+      uses: docker/setup-docker@v2
+      with:
+        dockerfile: Dockerfile
+
+    - name: Build docker image
+      run: docker build . --file Dockerfile --tag $(IMAGE_NAME):$(date +%s)
+
+    - name: Run docker container
+      run: |
+        # run the container and test its behavior
+        docker run --rm --name $(IMAGE_NAME):$(date +%s) curl http://localhost:5000
+        
   deploy:
-    name: Deploy docker image to DockerHub Registry
+    needs: build_and_run
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: Deploy
-      - name: setup docker buildx
-        uses: docker/setup-buildx-action@v2
-      - name: docker login
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: build and push api
-        id: build-push-api
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: ${{username}}/pyhton-flask-webapp:latest
-...
+      - name: Log in to Docker Hub
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Tag and push to DockerHub Registry
+        run: |
+          docker tag webapp ${{ secrets.DOCKERHUB_USERNAME }}/$(IMAGE_NAME):${{ github.ref }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/$(IMAGE_NAME):${{ github.ref }}
