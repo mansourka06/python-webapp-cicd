@@ -1,16 +1,26 @@
 ---
-name: pipeline
+name: Build and Push docker image to DockerHub Registry
 on:
   push:
-    branches: 
-      - 'main'
+    branches: [ "main" ]
     paths:
       - 'app/**'
-      - 'Dockerfile'
-    
+      - '.github/workflows/**'
+  pull_request:
+    branches: [ "main" ]
+
 jobs:
+  #Stage build docker image
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag pyhton-flask-webapp:$(date +%s)
+      
+  #Stage Deploy docker image
   deploy:
-    name: Build and Push image to DockerHub Registry
+    name: Deploy docker image to DockerHub Registry
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
