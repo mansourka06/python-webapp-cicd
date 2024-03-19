@@ -22,11 +22,20 @@ jobs:
     - name: Build docker image
       run: docker build . --file Dockerfile --tag ${{ env.IMAGE_NAME}}:${{env.IMAGE_TAG}}
 
-    - name: Run docker container
+    - name: Run and test docker container
       run: |
         # run the container and test its behavior
         docker run --rm --name ${{ env.IMAGE_NAME }}_container -p 5000:5000 ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-    
+        
+        # Add a delay to give the container time to start
+        sleep 5
+
+        # Check the container logs to verify it's running
+        docker logs ${{ env.IMAGE_NAME }}_container
+        
+        # Make an HTTP request to the exposed port
+        curl http://localhost:5000
+
   deploy:
     needs: build_and_run
     runs-on: ubuntu-latest
