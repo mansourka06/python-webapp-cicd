@@ -7,8 +7,8 @@ on:
     branches: [ "main" ]
     
 env:
-  IMAGE_NAME: pyhton-flask-webapp
-  
+  IMAGE_NAME: python-flask-webapp  # Update the image name here
+
 jobs:
   build_and_run:
     runs-on: ubuntu-latest
@@ -17,18 +17,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # - name: Set up Docker
-    #   uses: docker/setup-docker@v2
-    #   with:
-    #     dockerfile: Dockerfile
-
     - name: Build docker image
-      run: docker build . --file Dockerfile --tag $(IMAGE_NAME):$(date +%s)
+      run: docker build . --file Dockerfile --tag ${{ env.IMAGE_NAME}}:$(date +%s)  # Use env.IMAGE_NAME instead of $(IMAGE_NAME)
 
-    - name: Run docker container
+    - name: Run docker container and test its behavior
       run: |
-        # run the container and test its behavior
-        docker run --rm --name $(IMAGE_NAME):$(date +%s) curl http://localhost:5000
+        docker run --rm --name ${{ env.IMAGE_NAME}}:$(date +%s) curl http://localhost:5000
         
   deploy:
     needs: build_and_run
@@ -48,4 +42,4 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/$(IMAGE_NAME):latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:$(date +%s)
