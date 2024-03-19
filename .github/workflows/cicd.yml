@@ -25,10 +25,8 @@ jobs:
     - name: Run docker container
       run: |
         # run the container and test its behavior
-        docker run --rm --name ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} -p 5000:5000 ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-
+        docker run --rm --name ${{ env.IMAGE_NAME }}_container -p 5000:5000 ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
     
-        
   deploy:
     needs: build_and_run
     runs-on: ubuntu-latest
