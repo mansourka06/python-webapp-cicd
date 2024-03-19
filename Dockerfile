@@ -6,8 +6,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app/ .
 
 # Stage 2: Final Image
-FROM python:3.9-slim-buster
+FROM python:3.9-slim
 WORKDIR /app
-COPY --from=backend-builder /app /app
+COPY ./app /app
 EXPOSE 5000
 CMD ["python", "app.py"]
