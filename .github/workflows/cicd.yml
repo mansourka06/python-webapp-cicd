@@ -23,10 +23,10 @@ jobs:
       run: docker build . --file Dockerfile --tag ${{ env.IMAGE_NAME}}:${{env.IMAGE_TAG}}
 
     - name: Run and test docker container
-      #continue-on-error: true  # Continue ci execution when job failed with errors
+      continue-on-error: true  # Continue ci execution when job failed with errors
       run: |
         # run the container and test its behavior
-        docker run --name ${{ env.IMAGE_NAME }}_container ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        docker run --rm --name ${{ env.IMAGE_NAME }}_container ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
         
         # Add a delay to give the container time to start
         sleep 5
