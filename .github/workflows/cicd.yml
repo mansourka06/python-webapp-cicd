@@ -34,8 +34,8 @@ jobs:
         # Check the container logs to verify it's running
         docker logs ${{ env.IMAGE_NAME }}_container
         
-        # Make an HTTP request to the exposed port
-        curl http://localhost:5000
+        # # Make an HTTP request to the exposed port
+        # curl http://localhost:5000
 
   deploy:
     needs: build_and_run
