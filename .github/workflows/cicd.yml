@@ -26,13 +26,13 @@ jobs:
       continue-on-error: true  # Continue ci execution when job failed with errors
       run: |
         # run the container and test its behavior
-        docker run --rm --name ${{ env.IMAGE_NAME }}_container -p 5000:5000 ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        docker run --name ${{ env.IMAGE_NAME }}_container ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
         
         # Add a delay to give the container time to start
         sleep 5
 
         # Check the container logs to verify it's running
-        docker logs ${{ env.IMAGE_NAME }}_container
+        #docker logs ${{ env.IMAGE_NAME }}_container
         
         # # Make an HTTP request to the exposed port
         # curl http://localhost:5000
