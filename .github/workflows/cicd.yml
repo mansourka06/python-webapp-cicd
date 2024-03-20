@@ -25,17 +25,17 @@ jobs:
       - name: Run and test docker container
         #continue-on-error: true  # Continue ci execution when job failed with errors
         run: |
-        # Run the container in detached mode and test its behavior
-        docker run -d --rm --name ${{ env.IMAGE_NAME }}_container -p 5000:5000 ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          # Run the container in detached mode and test its behavior
+          docker run -d --rm --name ${{ env.IMAGE_NAME }}_container -p 5000:5000 ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
         
-        # Add a delay to give the container time to start
-        sleep 5
+          # Add a delay to give the container time to start
+          sleep 5
         
-        # Check the container logs to verify it's running
-        docker logs ${{ env.IMAGE_NAME }}_container
+          # Check the container logs to verify it's running
+          docker logs ${{ env.IMAGE_NAME }}_container
         
-        # Make an HTTP request to the exposed port
-        curl http://localhost:5000
+          # Make an HTTP request to the exposed port
+          curl http://localhost:5000
 
   deploy:
     needs: build_and_run
@@ -49,4 +49,6 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME}}:${{env.IMAGE_TAG}}
+        run: |
+          docker tag ${{ env.IMAGE_NAME}} ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME}}:${{env.IMAGE_TAG}}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME}}:${{env.IMAGE_TAG}}
