@@ -23,7 +23,13 @@ For a better understanding of this project, ensure you have the following prereq
 
 The `Dockerfile` in this repository is designed with multistage builds to efficiently build and package the Flask backend application. It uses separate stages for building dependencies and creating the final production image, resulting in a smaller and more secure Docker image.
 
-### GitHub Actions Pipeline
+### GitHub Actions pipeline
+ - Automated Workflows: The heart of this project is the GitHub Actions workflow, 
+automating everything from infrastructure setup to application deployment. 💻
+
+
+
+
 
 The GitHub Actions pipeline defined in `.github/workflows/cicd.yml` automates the deployment process. It triggers on push events to the `main` branch and builds the Docker image, tags it with the commit SHA, and pushes it to the Docker registry.
 
